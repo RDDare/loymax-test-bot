@@ -1,12 +1,12 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.1",
-    "signature": "bf48650f93816a8e8d0dc8d5453c70bbc19e0d1d"
+    "signature": "d28ebe72cf4b7a67d89761b0fc3feaf775e131e3"
   },
   "compilationOptions": {
     "defines": [
       "TRACE",
-      "DEBUG",
+      "RELEASE",
       "NETCOREAPP",
       "NETCOREAPP2_1"
     ],
@@ -14,7 +14,7 @@
     "platform": "",
     "allowUnsafe": false,
     "warningsAsErrors": false,
-    "optimize": false,
+    "optimize": true,
     "keyFile": "",
     "emitEntryPoint": true,
     "xmlDoc": false,
@@ -25,7 +25,6 @@
       "LoymaxTestBot/1.0.0": {
         "dependencies": {
           "Microsoft.AspNetCore.App": "2.1.1",
-          "Microsoft.AspNetCore.Razor.Design": "2.1.2",
           "Microsoft.NETCore.App": "2.1.0",
           "Telegram.Bot": "14.10.0"
         },
@@ -36,7 +35,6 @@
           "LoymaxTestBot.dll": {}
         }
       },
-      "Microsoft.AspNetCore.Razor.Design/2.1.2": {},
       "Microsoft.NETCore.App/2.1.0": {
         "dependencies": {
           "Microsoft.NETCore.DotNetHostPolicy": "2.1.0",
@@ -375,7 +373,6 @@
           "Microsoft.AspNetCore.NodeServices": "2.1.1",
           "Microsoft.AspNetCore.Owin": "2.1.1",
           "Microsoft.AspNetCore.Razor": "2.1.1",
-          "Microsoft.AspNetCore.Razor.Design": "2.1.2",
           "Microsoft.AspNetCore.Razor.Language": "2.1.1",
           "Microsoft.AspNetCore.Razor.Runtime": "2.1.1",
           "Microsoft.AspNetCore.ResponseCaching": "2.1.1",
@@ -961,7 +958,6 @@
           "Microsoft.AspNetCore.Mvc.RazorPages": "2.1.1",
           "Microsoft.AspNetCore.Mvc.TagHelpers": "2.1.1",
           "Microsoft.AspNetCore.Mvc.ViewFeatures": "2.1.1",
-          "Microsoft.AspNetCore.Razor.Design": "2.1.2",
           "Microsoft.Extensions.Caching.Memory": "2.1.1",
           "Microsoft.Extensions.DependencyInjection": "2.1.1"
         },
@@ -3206,13 +3202,6 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
-    },
-    "Microsoft.AspNetCore.Razor.Design/2.1.2": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-fe1+dpy+eM4IX1zodsvkihO1Spuj0NecfStWzvkYoMo7/ziOsqSv4vFK36ZpBfHa4gpdCEwaU46EPzdq+ZDYhQ==",
-      "path": "microsoft.aspnetcore.razor.design/2.1.2",
-      "hashPath": "microsoft.aspnetcore.razor.design.2.1.2.nupkg.sha512"
     },
     "Microsoft.NETCore.App/2.1.0": {
       "type": "package",
