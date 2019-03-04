@@ -1,0 +1,15 @@
+C:\Users\ASuS\source\repos\LoymaxTestBot\LoymaxTestBot\bin\Release\netcoreapp2.1\LoymaxTestBot.deps.json
+C:\Users\ASuS\source\repos\LoymaxTestBot\LoymaxTestBot\bin\Release\netcoreapp2.1\LoymaxTestBot.runtimeconfig.json
+C:\Users\ASuS\source\repos\LoymaxTestBot\LoymaxTestBot\bin\Release\netcoreapp2.1\LoymaxTestBot.runtimeconfig.dev.json
+C:\Users\ASuS\source\repos\LoymaxTestBot\LoymaxTestBot\bin\Release\netcoreapp2.1\LoymaxTestBot.dll
+C:\Users\ASuS\source\repos\LoymaxTestBot\LoymaxTestBot\bin\Release\netcoreapp2.1\LoymaxTestBot.pdb
+C:\Users\ASuS\source\repos\LoymaxTestBot\LoymaxTestBot\obj\Release\netcoreapp2.1\LoymaxTestBot.csproj.CoreCompileInputs.cache
+C:\Users\ASuS\source\repos\LoymaxTestBot\LoymaxTestBot\obj\Release\netcoreapp2.1\LoymaxTestBot.RazorAssemblyInfo.cache
+C:\Users\ASuS\source\repos\LoymaxTestBot\LoymaxTestBot\obj\Release\netcoreapp2.1\LoymaxTestBot.RazorAssemblyInfo.cs
+C:\Users\ASuS\source\repos\LoymaxTestBot\LoymaxTestBot\obj\Release\netcoreapp2.1\LoymaxTestBot.AssemblyInfoInputs.cache
+C:\Users\ASuS\source\repos\LoymaxTestBot\LoymaxTestBot\obj\Release\netcoreapp2.1\LoymaxTestBot.AssemblyInfo.cs
+C:\Users\ASuS\source\repos\LoymaxTestBot\LoymaxTestBot\obj\Release\netcoreapp2.1\LoymaxTestBot.RazorTargetAssemblyInfo.cache
+C:\Users\ASuS\source\repos\LoymaxTestBot\LoymaxTestBot\obj\Release\netcoreapp2.1\LoymaxTestBot.dll
+C:\Users\ASuS\source\repos\LoymaxTestBot\LoymaxTestBot\obj\Release\netcoreapp2.1\LoymaxTestBot.pdb
+C:\Users\ASuS\source\repos\LoymaxTestBot\LoymaxTestBot\obj\Release\netcoreapp2.1\LoymaxTestBot.csprojAssemblyReference.cache
+C:\Users\ASuS\source\repos\LoymaxTestBot\LoymaxTestBot\obj\Release\netcoreapp2.1\UserSecretsAssemblyInfo.cs
