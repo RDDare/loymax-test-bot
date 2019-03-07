@@ -29,6 +29,7 @@ namespace LoymaxTestBot.Models
             botClient = new TelegramBotClient(BotSettings.Key);
             var webHook = string.Format(BotSettings.Url, "api/message/update");
 
+            //web-hook
             await botClient.SetWebhookAsync(webHook);
 
             return botClient;

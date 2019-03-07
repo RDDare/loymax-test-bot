@@ -23,8 +23,8 @@ namespace LoymaxTestBot.Models.Commands
 
             await botClient.SendTextMessageAsync(
                 chatId,
-                "Welcome to Loymax Test Bot. First, push the /register button");
-                //replyMarkup: keyboard);
+                "Welcome to Loymax Test Bot. First, push the /register button",
+                replyMarkup: keyboard);
 
 
         }

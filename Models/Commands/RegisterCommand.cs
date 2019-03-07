@@ -17,11 +17,11 @@ namespace LoymaxTestBot.Models.Commands
 
             try
             {
-            await botClient.SendTextMessageAsync(chatId, "Enter first name", replyToMessageId: messageId);
+            await botClient.SendTextMessageAsync(chatId, "Enter first name");
             }
             catch(Exception er)
             {
-                await botClient.SendTextMessageAsync(chatId, er.ToString(), replyToMessageId: messageId);
+                await botClient.SendTextMessageAsync(chatId, er.ToString());
             }
 
 
