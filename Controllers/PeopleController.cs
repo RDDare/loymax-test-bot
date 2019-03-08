@@ -38,10 +38,6 @@ namespace LoymaxTestBot.Controllers
            
             var botClient = await Bot.GetBotClientAsync();
 
-            //await botClient.SendTextMessageAsync(
-            //                           message.Chat.Id,
-            //                           "new: " + update.Type.ToString());
-
             if (update.Type == UpdateType.Message)
             {
                 switch (message.Text)
@@ -52,7 +48,24 @@ namespace LoymaxTestBot.Controllers
                             var person = await _context.Person.FindAsync(message.Chat.Id);
                             if (person != null)
                             {
-                                await botClient.SendTextMessageAsync(message.Chat.Id, "You are already registered! You can /view or /delete registered data");
+                                InlineKeyboardButton viewButton = new InlineKeyboardButton();
+                                viewButton.Text = "\U0001F4C2 View";
+                                viewButton.CallbackData = "view";
+
+                                InlineKeyboardButton deleteButton = new InlineKeyboardButton();
+                                deleteButton.Text = "\U0000274C Delete";
+                                deleteButton.CallbackData = "delete";
+
+                                var keyboardInline = new InlineKeyboardButton[1][]; //Rows = 1
+                                var keyboardButtons = new InlineKeyboardButton[2]; //Columns = 2
+                                keyboardButtons[0] = viewButton;
+                                keyboardButtons[1] = deleteButton;
+
+                                keyboardInline[0] = keyboardButtons;
+
+                                InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup(keyboardInline);
+                                await botClient.SendTextMessageAsync(message.Chat.Id, "You are already registered! You can /view or /delete registered data", replyMarkup: keyboard);
+
                                 return Ok();
                             }
 
@@ -115,7 +128,11 @@ namespace LoymaxTestBot.Controllers
 
                             if (person == null)
                             {
-                                await botClient.SendTextMessageAsync(message.Chat.Id, "No registered data yet. Press /register to create account");
+                                InlineKeyboardButton button = new InlineKeyboardButton();
+                                button.Text = "\U0001F4DD Register";
+                                button.CallbackData = "register";
+                                InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup(button);
+                                await botClient.SendTextMessageAsync(message.Chat.Id, "No registered data yet. Press /register to create account", replyMarkup: keyboard);
                             }
                             else
                             {
@@ -239,7 +256,7 @@ namespace LoymaxTestBot.Controllers
                                     }
                                     catch (Exception er)
                                     {
-                                        await botClient.SendTextMessageAsync(message.Chat.Id, er.ToString() + "\r\nIncorrect data input. Please try again: YYYY-MM-DD");
+                                        await botClient.SendTextMessageAsync(message.Chat.Id, er.Message.ToString() + "\r\nIncorrect data input. Please try again: YYYY-MM-DD");
                                     }
                                 break;
                                 }
@@ -254,18 +271,40 @@ namespace LoymaxTestBot.Controllers
                 {
                     var data = update.CallbackQuery.Data;
                     var chatId = update.CallbackQuery.Message.Chat.Id;
+                    //var inlineMessageId = update.CallbackQuery.InlineMessageId;
+                    //var messageId = update.Message.MessageId;
 
                     switch (data)
                     {
                         case "register":
                             {
+                                
                                 //CHECK: User already registered
                                 var person = await _context.Person.FindAsync(chatId);
                                 if (person != null)
                                 {
+                                    InlineKeyboardButton viewButton = new InlineKeyboardButton();
+                                    viewButton.Text = "\U0001F4C2 View";
+                                    viewButton.CallbackData = "view";
+
+                                    InlineKeyboardButton deleteButton = new InlineKeyboardButton();
+                                    deleteButton.Text = "\U0000274C Delete";
+                                    deleteButton.CallbackData = "delete";
+
+                                    var keyboardInline = new InlineKeyboardButton[1][]; //Rows = 1
+                                    var keyboardButtons = new InlineKeyboardButton[2]; //Columns = 2
+                                    keyboardButtons[0] = viewButton;
+                                    keyboardButtons[1] = deleteButton;
+
+                                    keyboardInline[0] = keyboardButtons;
+
+                                    InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup(keyboardInline);
+
+                                    //await botClient.EditMessageTextAsync(chatId, messageId, "You are already registered! You can /view or /delete registered data", replyMarkup: keyboard);
+
                                     await botClient.SendTextMessageAsync(
                                         chatId,
-                                        "You are already registered! You can /view or /delete registered data");
+                                        "You are already registered! You can /view or /delete registered data", replyMarkup: keyboard);
                                     return Ok();
                                 }
 
@@ -318,6 +357,14 @@ namespace LoymaxTestBot.Controllers
                             }
                         case "view":
                             {
+                                //try
+                                //{
+                                //    View(chatId, botClient);
+                                //}
+                                //catch(Exception er)
+                                //{
+                                //    await botClient.SendTextMessageAsync(chatId, er.ToString());
+                                //}
                                 var person = await _context.Person.FindAsync(chatId);
 
                                 if (person == null)
@@ -359,15 +406,21 @@ namespace LoymaxTestBot.Controllers
                             {
                                 var person = await _context.Person.FindAsync(chatId);
 
+                                InlineKeyboardButton button = new InlineKeyboardButton();
+                                button.Text = "\U0001F4DD Register";
+                                button.CallbackData = "register";
+                                InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup(button);
+
                                 if (person == null)
                                 {
-                                    await botClient.SendTextMessageAsync(chatId, "No registered data yet. Press /register to create account");
+                                    
+                                    await botClient.SendTextMessageAsync(chatId, "No registered data yet. Press /register to create account", replyMarkup: keyboard);
                                 }
                                 else
                                 {
                                     _context.Person.Remove(person);
                                     await _context.SaveChangesAsync();
-                                    await botClient.SendTextMessageAsync(chatId, "Data removed succesfully! You can always /register again.");
+                                    await botClient.SendTextMessageAsync(chatId, "Data removed succesfully! You can always /register again.", replyMarkup: keyboard);
                                 }
                                 break;
                             }
@@ -377,7 +430,11 @@ namespace LoymaxTestBot.Controllers
 
                                 if (person == null)
                                 {
-                                    await botClient.SendTextMessageAsync(chatId, "No registered data yet. Press /register to create account");
+                                    InlineKeyboardButton button = new InlineKeyboardButton();
+                                    button.Text = "\U0001F4DD Register";
+                                    button.CallbackData = "register";
+                                    InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup(button);
+                                    await botClient.SendTextMessageAsync(chatId, "No registered data yet. Press /register to create account", replyMarkup: keyboard);
                                 }
                                 else
                                 {
@@ -420,5 +477,51 @@ namespace LoymaxTestBot.Controllers
         {
             return _context.Person.Any(e => e.Id == id);
         }
+
+        //private async void View(long chatId, Telegram.Bot.TelegramBotClient botClient)
+        //{
+        //    try
+        //    { 
+        //        var person = await _context.Person.FindAsync(chatId);
+
+        //        if (person == null)
+        //        {
+        //            InlineKeyboardButton button = new InlineKeyboardButton();
+        //            button.Text = "\U0001F4DD Register";
+        //            button.CallbackData = "register";
+        //            InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup(button);
+        //            await botClient.SendTextMessageAsync(chatId, "No registered data yet. Press /register to create account", replyMarkup: keyboard);
+        //        }
+        //        else
+        //        {
+        //            InlineKeyboardButton viewButton = new InlineKeyboardButton();
+        //            viewButton.Text = "\U0001F4C2 View";
+        //            viewButton.CallbackData = "view";
+
+        //            InlineKeyboardButton deleteButton = new InlineKeyboardButton();
+        //            deleteButton.Text = "\U0000274C Delete";
+        //            deleteButton.CallbackData = "delete";
+
+        //            var keyboardInline = new InlineKeyboardButton[1][]; //Rows = 1
+        //            var keyboardButtons = new InlineKeyboardButton[2]; //Columns = 2
+        //            keyboardButtons[0] = viewButton;
+        //            keyboardButtons[1] = deleteButton;
+
+        //            keyboardInline[0] = keyboardButtons;
+
+        //            InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup(keyboardInline);
+
+        //            string reply = "\U00002139 Full Name: " + person.SecondName + " " + person.FirstName;
+        //            reply += " " + person.Patronymic + "\r\n\U0001F4C5 Date of birth: ";
+        //            reply += person.DateBirth.ToShortDateString();
+        //            await botClient.SendTextMessageAsync(chatId, reply, replyMarkup: keyboard);
+
+        //        }
+        //    }
+        //    catch(Exception er)
+        //    {
+        //        await botClient.SendTextMessageAsync(chatId, er.ToString());
+        //    }
+        //}
     }
 }
