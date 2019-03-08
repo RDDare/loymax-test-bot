@@ -11,6 +11,7 @@ using LoymaxTestBot.Models;
 using LoymaxTestBot.Models.Commands;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace LoymaxTestBot.Controllers
 {
@@ -75,15 +76,35 @@ namespace LoymaxTestBot.Controllers
 
                             if (person == null)
                             {
-                                await botClient.SendTextMessageAsync(message.Chat.Id, "No registered data yet. Press /register to create account");
-
+                                InlineKeyboardButton button = new InlineKeyboardButton();
+                                button.Text = "\U0001F4DD Register";
+                                button.CallbackData = "register";
+                                InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup(button);
+                                await botClient.SendTextMessageAsync(message.Chat.Id, "No registered data yet. Press /register to create account", replyMarkup: keyboard);
                             }
                             else
                             {
-                                string reply = "Full Name: " + person.SecondName + " " + person.FirstName;
-                                reply += " " + person.Patronymic + "\r\nDate of birth: ";
+                                InlineKeyboardButton viewButton = new InlineKeyboardButton();
+                                viewButton.Text = "\U0001F4C2 View";
+                                viewButton.CallbackData = "view";
+
+                                InlineKeyboardButton deleteButton = new InlineKeyboardButton();
+                                deleteButton.Text = "\U0000274C Delete";
+                                deleteButton.CallbackData = "delete";
+
+                                var keyboardInline = new InlineKeyboardButton[1][]; //Rows = 1
+                                var keyboardButtons = new InlineKeyboardButton[2]; //Columns = 2
+                                keyboardButtons[0] = viewButton;
+                                keyboardButtons[1] = deleteButton;
+
+                                keyboardInline[0] = keyboardButtons;
+
+                                InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup(keyboardInline);
+
+                                string reply = "\U00002139 Full Name: " + person.SecondName + " " + person.FirstName;
+                                reply += " " + person.Patronymic + "\r\n\U0001F4C5 Date of birth: ";
                                 reply += person.DateBirth.ToShortDateString();
-                                await botClient.SendTextMessageAsync(message.Chat.Id, reply);
+                                await botClient.SendTextMessageAsync(message.Chat.Id, reply, replyMarkup: keyboard);
                             }
                                 
                             break;
@@ -98,9 +119,26 @@ namespace LoymaxTestBot.Controllers
                             }
                             else
                             {
-                                _context.Person.Remove(person);
-                                await _context.SaveChangesAsync();
-                                await botClient.SendTextMessageAsync(message.Chat.Id, "Data removed succesfully! You can always /register again.");
+                                InlineKeyboardButton yesButton = new InlineKeyboardButton();
+                                yesButton.Text = "\U0001F4A2 Yes";
+                                yesButton.CallbackData = "delete-yes";
+
+                                InlineKeyboardButton noButton = new InlineKeyboardButton();
+                                noButton.Text = "\U0000274E No";
+                                noButton.CallbackData = "delete-no";
+
+                                var keyboardInline = new InlineKeyboardButton[1][]; //Rows = 1
+                                var keyboardButtons = new InlineKeyboardButton[2]; //Columns = 2
+                                keyboardButtons[0] = yesButton;
+                                keyboardButtons[1] = noButton;
+
+                                keyboardInline[0] = keyboardButtons;
+
+                                InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup(keyboardInline);
+
+                                await botClient.SendTextMessageAsync(message.Chat.Id, "Are you really want to erase account data?", replyMarkup: keyboard);
+
+                                
                             }
                             break;
                         }
@@ -156,10 +194,9 @@ namespace LoymaxTestBot.Controllers
                                 }
                             case 4:
                                 {
+                                    sw.Close();
                                     try
-                                    {
-                                        sw.WriteLine(message.Text);
-                                        sw.Close();
+                                    { 
                                         Person newPerson = new Person();
                                         newPerson.Id = message.Chat.Id;
                                         newPerson.FirstName = parameters[0].Split(separator, 2, StringSplitOptions.RemoveEmptyEntries)[1];
@@ -175,18 +212,36 @@ namespace LoymaxTestBot.Controllers
                                         newPerson.DateBirth = birthDate;
                                         _context.Person.Add(newPerson);
                                         await _context.SaveChangesAsync();
+
+                                        InlineKeyboardButton viewButton = new InlineKeyboardButton();
+                                        viewButton.Text = "\U0001F4C2 View";
+                                        viewButton.CallbackData = "view";
+
+                                        InlineKeyboardButton deleteButton = new InlineKeyboardButton();
+                                        deleteButton.Text = "\U0000274C Delete";
+                                        deleteButton.CallbackData = "delete";
+
+                                        var keyboardInline = new InlineKeyboardButton[1][]; //Rows = 1
+                                        var keyboardButtons = new InlineKeyboardButton[2]; //Columns = 2
+                                        keyboardButtons[0] = viewButton;
+                                        keyboardButtons[1] = deleteButton;
+
+                                        keyboardInline[0] = keyboardButtons;
+
+                                        InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup(keyboardInline);
+
                                         await botClient.SendTextMessageAsync(
-                                            message.Chat.Id,
-                                            "Great! You are registered! Now you can /view or /delete registered data",
-                                            ParseMode.Markdown);
+                                                message.Chat.Id,
+                                                "Great! You are registered! Now you can /view or /delete registered data",
+                                                replyMarkup: keyboard);
                                         System.IO.File.Delete(System.AppDomain.CurrentDomain.BaseDirectory + message.Chat.Id + ".txt");
 
                                     }
                                     catch (Exception er)
                                     {
-                                        await botClient.SendTextMessageAsync(message.Chat.Id, er.ToString());
+                                        await botClient.SendTextMessageAsync(message.Chat.Id, er.ToString() + "\r\nIncorrect data input. Please try again: YYYY-MM-DD");
                                     }
-                                    break;
+                                break;
                                 }
 
                         }
@@ -222,6 +277,134 @@ namespace LoymaxTestBot.Controllers
                                 sw.Close();
                                 break;
                             }
+                        case "delete-no":
+                            {
+                                var person = await _context.Person.FindAsync(chatId);
+
+                                if (person == null)
+                                {
+                                    InlineKeyboardButton button = new InlineKeyboardButton();
+                                    button.Text = "\U0001F4DD Register";
+                                    button.CallbackData = "register";
+                                    InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup(button);
+                                    await botClient.SendTextMessageAsync(chatId, "No registered data yet. Press /register to create account", replyMarkup: keyboard);
+                                }
+                                else
+                                {
+
+                                    InlineKeyboardButton viewButton = new InlineKeyboardButton();
+                                    viewButton.Text = "\U0001F4C2 View";
+                                    viewButton.CallbackData = "view";
+
+                                    InlineKeyboardButton deleteButton = new InlineKeyboardButton();
+                                    deleteButton.Text = "\U0000274C Delete";
+                                    deleteButton.CallbackData = "delete";
+
+                                    var keyboardInline = new InlineKeyboardButton[1][]; //Rows = 1
+                                    var keyboardButtons = new InlineKeyboardButton[2]; //Columns = 2
+                                    keyboardButtons[0] = viewButton;
+                                    keyboardButtons[1] = deleteButton;
+
+                                    keyboardInline[0] = keyboardButtons;
+
+                                    InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup(keyboardInline);
+
+                                    string reply = "\U00002139 Full Name: " + person.SecondName + " " + person.FirstName;
+                                    reply += " " + person.Patronymic + "\r\n\U0001F4C5 Date of birth: ";
+                                    reply += person.DateBirth.ToShortDateString();
+                                    await botClient.SendTextMessageAsync(chatId, reply, replyMarkup: keyboard);
+                                }
+                                break;
+                            }
+                        case "view":
+                            {
+                                var person = await _context.Person.FindAsync(chatId);
+
+                                if (person == null)
+                                {
+                                    InlineKeyboardButton button = new InlineKeyboardButton();
+                                    button.Text = "\U0001F4DD Register";
+                                    button.CallbackData = "register";
+                                    InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup(button);
+                                    await botClient.SendTextMessageAsync(chatId, "No registered data yet. Press /register to create account", replyMarkup: keyboard);
+                                }
+                                else
+                                {
+                                    InlineKeyboardButton viewButton = new InlineKeyboardButton();
+                                    viewButton.Text = "\U0001F4C2 View";
+                                    viewButton.CallbackData = "view";
+
+                                    InlineKeyboardButton deleteButton = new InlineKeyboardButton();
+                                    deleteButton.Text = "\U0000274C Delete";
+                                    deleteButton.CallbackData = "delete";
+
+                                    var keyboardInline = new InlineKeyboardButton[1][]; //Rows = 1
+                                    var keyboardButtons = new InlineKeyboardButton[2]; //Columns = 2
+                                    keyboardButtons[0] = viewButton;
+                                    keyboardButtons[1] = deleteButton;
+
+                                    keyboardInline[0] = keyboardButtons;
+
+                                    InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup(keyboardInline);
+
+                                    string reply = "\U00002139 Full Name: " + person.SecondName + " " + person.FirstName;
+                                    reply += " " + person.Patronymic + "\r\n\U0001F4C5 Date of birth: ";
+                                    reply += person.DateBirth.ToShortDateString();
+                                    await botClient.SendTextMessageAsync(chatId, reply, replyMarkup: keyboard);
+                                }
+
+                                break;
+                            }
+                        case "delete-yes":
+                            {
+                                var person = await _context.Person.FindAsync(chatId);
+
+                                if (person == null)
+                                {
+                                    await botClient.SendTextMessageAsync(chatId, "No registered data yet. Press /register to create account");
+                                }
+                                else
+                                {
+                                    _context.Person.Remove(person);
+                                    await _context.SaveChangesAsync();
+                                    await botClient.SendTextMessageAsync(chatId, "Data removed succesfully! You can always /register again.");
+                                }
+                                break;
+                            }
+                        case "delete":
+                            {
+                                var person = await _context.Person.FindAsync(chatId);
+
+                                if (person == null)
+                                {
+                                    await botClient.SendTextMessageAsync(chatId, "No registered data yet. Press /register to create account");
+                                }
+                                else
+                                {
+                                    InlineKeyboardButton yesButton = new InlineKeyboardButton();
+                                    yesButton.Text = "\U0001F4A2 Yes";
+                                    yesButton.CallbackData = "delete-yes";
+
+                                    InlineKeyboardButton noButton = new InlineKeyboardButton();
+                                    noButton.Text = "\U0000274E No";
+                                    noButton.CallbackData = "delete-no";
+
+                                    var keyboardInline = new InlineKeyboardButton[1][]; //Rows = 1
+                                    var keyboardButtons = new InlineKeyboardButton[2]; //Columns = 2
+                                    keyboardButtons[0] = yesButton;
+                                    keyboardButtons[1] = noButton;
+
+                                    keyboardInline[0] = keyboardButtons;
+
+                                    InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup(keyboardInline);
+
+                                    await botClient.SendTextMessageAsync(chatId, "Are you really want to erase account data?", replyMarkup: keyboard);
+
+
+                                }
+                                break;
+                            }
+                        
                     }
                 }
                 catch(Exception er)
